@@ -4,6 +4,22 @@ from sqlite3 import IntegrityError
 from app.models import Favourite
 
 
+def is_favourite(user, image):
+
+    favourites = Favourite.objects.all()  # Traemos todos los registros de favoritos
+    
+    favourite_images = []
+    
+    for fav in favourites:
+        if fav.user == user and fav.image == image:
+            favourite_images.append(fav.image)
+    
+    # Ahora verificamos si la lista 'favourite_images' contiene la imagen que estamos buscando
+    if image in favourite_images:
+        return True
+    else:
+        return False
+    
 def save_favourite(fav):
     try:
         fav = Favourite.objects.create(
@@ -25,9 +41,7 @@ def save_favourite(fav):
 
 
 def get_all_favourites(user):
-    return list(Favourite.objects.filter(user=user).values(
-        'id', 'name', 'gender', 'house', 'actor', 'image'
-    ))
+    return Favourite.objects.filter(user=user).values('id', 'name', 'gender', 'house', 'actor', 'image')
 
 
 def delete_favourite(fav_id):

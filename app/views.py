@@ -13,12 +13,16 @@ def getAllImagesAndFavouriteList(request):
     #obtenemos todas las imagenes de la API
     images = services.getAllImages()
 
-    return images
+    if request.user.is_authenticated:
+        favourite_list = services.getAllFavourites(request.user)
+    else:
+        favourite_list = []
+
+    return images, favourite_list
 
 def home(request):
     # Llama a la funcion auxiliar getAllImagesFavouriteList() y obtiene 2 listados: uno de las imágenes de la API y otro de favoritos por usuario
-    favourite_list = []
-    images = getAllImagesAndFavouriteList(request)
+    images, favourite_list = getAllImagesAndFavouriteList(request)
 
     return render(request, 'home.html', { 'images': images, 'favourite_list': favourite_list })
 
@@ -27,18 +31,18 @@ def home(request):
 def search(request):
 
     name = request.GET.get('query', '')
-    all_images = getAllImagesAndFavouriteList(request)
+    images, favourite_list = getAllImagesAndFavouriteList(request)
 
     # si el usuario ingresó algo en el buscador, se deben filtrar las imágenes por dicho ingreso.
-    images = []
+    images_coin = []
 
     if name: 
-        for img in all_images:
+        for img in images:
             if name.lower() in img.name.lower():
-                images.append(img) # Agregamos la imagen a la lista images = []
+                images_coin.append(img) # Agregamos la imagen a la lista images = []
             
             favourite_list = []
-        return render(request, 'home.html', { 'images': images, 'favourite_list': favourite_list })
+        return render(request, 'home.html', { 'images': images_coin, 'favourite_list': favourite_list })
     else:
         return redirect('home')
 
@@ -46,17 +50,17 @@ def search(request):
 def filter_by_house(request):
 
     house = request.POST.get('house', '')
-    all_images = getAllImagesAndFavouriteList(request)
+    images, favourite_list = getAllImagesAndFavouriteList(request)
 
-    images = [] # debe traer un listado filtrado de imágenes, según la casa.
+    images_coin = [] # debe traer un listado filtrado de imágenes, según la casa.
 
     if house:
-        for img in all_images:
+        for img in images:
             if house == img.house:
-                images.append(img)
+                images_coin.append(img)
         favourite_list = []
 
-        return render(request, 'home.html', { 'images': images, 'favourite_list': favourite_list })
+        return render(request, 'home.html', { 'images': images_coin, 'favourite_list': favourite_list })
     else:
         return redirect('home')
 
