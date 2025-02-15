@@ -4,9 +4,9 @@
 
     <div class="d-flex justify-content-center" style="margin-bottom: 1%">
         <!-- Buscador del sitio -->
-        <form class="d-flex" action="{% url 'buscar' %}" method="POST">
+        <form class="d-flex" action="{% url 'buscar' %}" method="GET">
             {% csrf_token %}
-            <input class="form-control me-2" type="search" name="query" placeholder="Ginny, Ron, Harry" aria-label="Search">
+            <input class="form-control me-2" type="search" name="query" placeholder="Ginny, Ron, Harry" value="{{ query }}" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Buscar</button>
         </form>
     </div>
@@ -15,7 +15,7 @@
         <form method="post" action="{% url 'filter_by_house' %}">
             {% csrf_token %}
             <input type="hidden" name="house" value="Gryffindor">
-            <button type="submit" class="btn btn-primary">SOLO Gryffindor</button>
+            <button type="submit" class="btn btn-primary" >SOLO Gryffindor</button>
         </form>
 
         <form method="post" action="{% url 'filter_by_house' %}">

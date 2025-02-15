@@ -25,23 +25,35 @@ def home(request):
 
 # función utilizada en el buscador.
 def search(request):
-    name = request.POST.get('query', '')
+
+    name = request.GET.get('query', '')
+    all_images = getAllImagesAndFavouriteList(request)
 
     # si el usuario ingresó algo en el buscador, se deben filtrar las imágenes por dicho ingreso.
-    if (name != ''):
-        images = []
-        favourite_list = []
+    images = []
 
+    if name: 
+        for img in all_images:
+            if name.lower() in img.name.lower():
+                images.append(img) # Agregamos la imagen a la lista images = []
+            
+            favourite_list = []
         return render(request, 'home.html', { 'images': images, 'favourite_list': favourite_list })
     else:
         return redirect('home')
 
 # función utilizada para filtrar por casa Gryffindor o Slytherin.
 def filter_by_house(request):
-    house = request.POST.get('house', '')
 
-    if house != '':
-        images = [] # debe traer un listado filtrado de imágenes, según la casa.
+    house = request.POST.get('house', '')
+    all_images = getAllImagesAndFavouriteList(request)
+
+    images = [] # debe traer un listado filtrado de imágenes, según la casa.
+
+    if house:
+        for img in all_images:
+            if house == img.house:
+                images.append(img)
         favourite_list = []
 
         return render(request, 'home.html', { 'images': images, 'favourite_list': favourite_list })
