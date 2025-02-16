@@ -2,26 +2,33 @@
 {% load static %}
 
 <main style="background-image: url('{% static 'img/salon.jpg' %}'); background-size: cover; background-repeat: no-repeat; background-position: center; background-attachment: fixed; min-height: 100vh;">
+    
+    <!-- Pantalla de carga -->
+    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); display: none; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
 
     <h1 class="text-center" style="color: white; padding: 20px;">Buscador de personajes de Harry Potter</h1>
 
     <div class="d-flex justify-content-center" style="margin-bottom: 1%">
         <!-- Buscador del sitio -->
-        <form class="d-flex" action="{% url 'buscar' %}" method="GET">
+        <form class="d-flex search-form" action="{% url 'buscar' %}" method="GET">
             {% csrf_token %}
             <input class="form-control me-2" type="search" name="query" placeholder="Ginny, Ron, Harry" value="{{ query }}" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Buscar</button>
+            <button class="btn btn-secondary" type="submit">Buscar</button>
         </form>
     </div>
 
     <div class="d-flex gap-1 col-2 mx-auto mb-3">
-        <form method="post" action="{% url 'filter_by_house' %}">
+        <form method="post" action="{% url 'filter_by_house' %}"class="filter-form" >
             {% csrf_token %}
             <input type="hidden" name="house" value="Gryffindor">
             <button type="submit" class="btn btn-success" >SOLO Gryffindor</button>
         </form>
 
-        <form method="post" action="{% url 'filter_by_house' %}">
+        <form method="post" action="{% url 'filter_by_house' %}" class="filter-form">
             {% csrf_token %}
             <input type="hidden" name="house" value="Slytherin">
             <button type="submit" class="btn btn-danger">SOLO Slytherin</button>
@@ -34,7 +41,7 @@
         {% else %} {% for img in images %}
         <div class="col">
             <!-- evaluar si la imagen pertenece a Gryffindor, Slytherin u otro -->
-            <div class="card {% if img.house == 'Gryffindor' %}border-success{% elif img.house == 'Slytherin' %}border-danger{% else %}border-warning{% endif %} mb-3 ms-5" style="max-width: 540px; ">
+            <div class="card border border-3 {% if img.house == 'Gryffindor' %}border-success{% elif img.house == 'Slytherin' %}border-danger{% else %}border-warning{% endif %} mb-3 ms-5" style="max-width: 540px; ">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <img src="{{ img.image }}" class="card-img-top" alt="imagen">
@@ -45,7 +52,7 @@
                             <h3 class="card-title">{{ img.name }} ⭐</h3>
                             <p class="card-text">
                                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                    <strong><em>{{ img.alternate_names }}</em></strong>
+                                    <strong><em>{{ img.alternate_name }}</em></strong>
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             </p>
@@ -74,4 +81,31 @@
         {% endfor %} {% endif %}
     </div>
 </main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Captura los formularios de búsqueda y filtrado
+        let searchForm = document.querySelector(".search-form");
+        let filterForms = document.querySelectorAll(".filter-form");
+        let loadingScreen = document.getElementById("loading-screen");
+
+        // Muestra el loader cuando se envía el formulario de búsqueda
+        searchForm.addEventListener("submit", function () {
+            loadingScreen.style.display = "flex";
+        });
+
+        // Muestra el loader cuando se envía un formulario de filtro
+        filterForms.forEach(function (form) {
+            form.addEventListener("submit", function () {
+                loadingScreen.style.display = "flex";
+            });
+        });
+
+        // Oculta el loader cuando la página ha cargado
+        window.addEventListener("load", function () {
+            loadingScreen.style.display = "none";
+        });
+    });
+</script>
+
 {% endblock %}

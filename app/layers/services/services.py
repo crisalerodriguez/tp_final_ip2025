@@ -13,13 +13,13 @@ def getAllImages():
     images = []
 
     for object in json_collection:
-        card = translator.fromRepositoryIntoCard(object)
+        card = translator.fromRequestIntoCard(object)
 
         # Seleccionar un nombre alternativo al azar, si existen.
         if "alternate_names" in object and object["alternate_names"]:
             card.alternate_name = random.choice(object["alternate_names"])
         else:
-            card.alternate_name = "No alternate names available."
+            card.alternate_name = "No tiene apodos"
 
         images.append(card)
 
