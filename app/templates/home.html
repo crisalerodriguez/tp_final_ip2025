@@ -22,7 +22,7 @@
     </div>
 
     <div class="d-flex gap-1 col-2 mx-auto mb-3">
-        <form method="post" action="{% url 'filter_by_house' %}"class="filter-form" >
+        <form method="post" action="{% url 'filter_by_house' %}" class="filter-form" >
             {% csrf_token %}
             <input type="hidden" name="house" value="Gryffindor">
             <button type="submit" class="btn btn-success" >SOLO Gryffindor</button>

@@ -1,6 +1,7 @@
 {% extends 'header.html' %} {% block content %}
 {% load static %}
 <body style="background-image: url('{% static 'img/collage.jpg' %}'); background-size:cover background-position:center;">
+    
     <div class="login-form d-flex justify-content-center align-items-center" style="text-align: center; margin-top: 25vh;">
         <form style="background-color: rgb(252, 252, 252); padding: 25px; border-radius: 10%;" action="" method="POST" style="display: inline-block;">
             {% csrf_token %}
@@ -16,5 +17,6 @@
             </div>
         </form>
     </div>
+    
 </body>
 {% endblock %}
